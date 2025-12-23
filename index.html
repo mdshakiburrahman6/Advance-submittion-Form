@@ -12,6 +12,7 @@
     <style>
         :root{
            --primary-color: #319BB5;
+           --accent-color: #24d2fd;
         }
         /* Progress */
         .msr-progress {
@@ -72,8 +73,34 @@
             border-radius: 5px;
             background-color: var(--primary-color);
         }
+        .form-checkbox{
+            border: 1px solid #319bb5b6;
+            border-radius: 5px;
+            background-color: #f3fcff;
+            height: auto !important;
+            /* padding: 5px 10px; */
+        }
+
+        /* Form Col */
+        .step-col-3{
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 33.33%;
+        }
+        .step-col-4{
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 50%;
+        }
 
         /* Main */
+            .form-area {
+                position: relative;
+                width: 100%;
+            }
+
             .msr-form-body{
                 margin: 80px 0;
                 display: flex;
@@ -83,11 +110,23 @@
                 gap: 50px;
             }
             .msr-step {
-                display: none;
+                position: absolute;
+                width: 100%;
+                opacity: 0;
+                transform: translateX(30px);
+                pointer-events: none;
+                transition:
+                    opacity 0.4s ease,
+                    transform 0.4s ease;
             }
+
             .msr-step.active {
-                display: block;
+                position: relative;
+                opacity: 1;
+                transform: translateX(0);
+                pointer-events: auto;
             }
+
 
             .step-area{
                 display: flex;
@@ -106,8 +145,10 @@
                 gap: 20px;
             }
             .form-button{
+                margin-top: 10px;
                 display:  flex;
                 gap: 30px;
+                justify-content: center;
             }
 
             /* Behalf Style */
@@ -117,14 +158,61 @@
                 align-items: center;
                 gap: 10px;
             }
-            .after_behalf{
-                display: flex;   
-                justify-content: space-between;
+            .after_behalf {
+                display: flex;
+                overflow: hidden;
+                max-height: 0;
+                opacity: 0;
+                transform: translateY(-10px);
+                transition: 
+                    max-height 0.5s ease,
+                    opacity 0.4s ease,
+                    transform 0.4s ease;
             }
+
+            .after_behalf.active {
+                max-height: 500px; /* enough height */
+                opacity: 1;
+                transform: translateY(0);
+            }
+
             .behalf-item{
                 display: flex;
                 flex-direction: column;
                 gap: 10px;
+                width: 33.33%;
+            }
+            .mar-l{
+                margin-left: 20px;
+            }
+            /* Step-1 Styles */
+            .step-1-top , .step-1-bottom{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 20px;
+            }
+            .step-item{
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                width: 25%;
+            }
+            .form-condition{
+                display: flex;
+                flex-direction: column;
+            }
+            .condition-item{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+            }
+            .condition-item a{
+                color: var(--primary-color);
+            }
+            .condition-item a:hover{
+                color: var(--accent-color);
             }
     </style>
 
@@ -160,13 +248,13 @@
                                 <div class="form-fields">
                                     <!-- Checkbox for behalf  -->
                                     <div class="behalf text-center mb-2">
-                                        <input type="checkbox" name="mrs_s-1_behalf" id="mrs_s-1_behalf">
+                                        <input class="form-checkbox" type="checkbox" name="mrs_s-1_behalf" id="mrs_s-1_behalf">
                                         <label for="mrs_s-1_behalf">Check here if you are filling out this form on behalf of another person.</label>
                                     </div>
                                     <!-- If behalf -->
                                     <div class="after_behalf">
                                         <div class="behalf-item">
-                                            <label for="relation_cgm">Relationship to CGM User</label>
+                                            <label for="relation_cgm">Relationship to CGM User*</label>
                                             <select name="relation_cgm" id="relation_cgm" required>
                                                 <option value="">Please select the best answer.</option>
                                                 <option value="Parent">Parent</option>
@@ -175,18 +263,77 @@
                                                 <option value="Other">Other</option>
                                             </select>
                                         </div>
-                                        <div class="behalf-item">
-                                             <label for="behalf_first_name">Your First Name</label>
+                                        <div class="behalf-item mar-l">
+                                             <label for="behalf_first_name">Your First Name*</label>
                                             <input type="text" name="behalf_first_name" id="behalf_first_name" required>
                                         </div>
-                                        <div class="behalf-item">
-                                             <label for="behalf_last_name">Your Last Name</label>
+                                        <div class="behalf-item mar-l">
+                                            <label for="behalf_last_name">Your Last Name*</label>
                                             <input type="text" name="behalf_last_name" id="behalf_last_name" required>
                                         </div>
                                     </div>
 
                                     <!-- Main Content (s-1) -->
-                                    <input type="email" name="msr_email" placeholder="Your Email" required>
+                                    
+                                    <div class="step-1-top">
+                                        <div class="step-item">
+                                            <label for="msr_s_1_title">Title</label>
+                                            <select name="msr_s_1_title" id="msr_s_1_title">
+                                                <option value="">Select title</option>
+                                                <option value="Mr.">Mr.</option>
+                                                <option value="Mrs.">Mrs.</option>
+                                                <option value="Ms.">Ms.</option>
+                                            </select>
+                                        </div>
+                                        <div class="step-item">
+                                            <label for="msr_s_1_first_name">First Name*</label>
+                                            <input type="text" name="msr_s_1_first_name" required>
+                                        </div>
+                                        <div class="step-item">
+                                            <label for="msr_s_1_last_name">Last Name*</label>
+                                            <input type="text" name="msr_s_1_last_name" required>
+                                        </div>
+                                        <div class="step-item">
+                                            <label for="msr_s_1_birth">Date of Birth*</label>
+                                            <input type="date" name="msr_s_1_birth" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="step-1-bottom">
+                                        <div class="step-col-3">
+                                            <label for="msr_s_1_title">Device Preference*</label>
+                                            <select name="msr_s_1_title" id="msr_s_1_title" required>
+                                                <option value="">Select device</option>
+                                                <option value="Dexcom G7 15 day">Dexcom G7 15 day</option>
+                                                <option value="Dexcom G7 CGM System">Dexcom G7 CGM System</option>
+                                                <option value="Dexcom G6 CGM System">Dexcom G6 CGM System</option>
+                                                <option value="FreeStyle Libre 3 Plus System">FreeStyle Libre 3 Plus System</option>
+                                                <option value="FreeStyle Libre 2 Plus ">FreeStyle Libre 2 Plus </option>
+                                                <option value="Medtronic Instinct Sensor">Medtronic Instinct Sensor</option>
+                                                <option value="Medtronic Simplera Sync™ Sensor">Medtronic Simplera Sync™ Sensor</option>
+                                            </select>
+                                        </div>
+                                        <div class="step-col-3">
+                                            <label for="msr_s_1_title">E-mail*</label>
+                                            <input type="email" name="msr_email" required>
+                                        </div>
+                                        <div class="step-col-3">
+                                            <label for="msr_s_1_title">Phone Number*</label>
+                                            <input type="tel" name="msr_phone" id="msr_phone" required>
+                                        </div>
+                                    </div>
+                                    <!-- ---------()---------- -->
+                                     <div class="form-condition">
+                                        <div class="condition-item">
+                                            <input class="form-checkbox" type="checkbox" name="mrs_con_privacy" id="mrs_con_privacy" required>
+                                            <label for="mrs_con_privacy">I agree that my information will be used as described on this page and in the Edgepark <a href="#">Notice of Privacy Practices</a></label>
+                                        </div>
+                                        <div class="condition-item">
+                                            <input class="form-checkbox" type="checkbox" name="mrs_con_privacy" id="mrs_con_privacy" required>
+                                            <label for="mrs_con_privacy">I agree to enroll to receive real-time order updates via text message/SMS. <a href="#">Terms & Conditions</a></label>
+                                        </div>
+                                     </div>
+                                    
                                 </div>
                                 <div class="form-button">
                                     <button type="button" class="msr-prev">Back</button>
@@ -362,6 +509,63 @@ document.addEventListener('DOMContentLoaded', function () {
 
     showStep(currentStep);
 });
+
+
+// Behalf - Step -1
+document.addEventListener('DOMContentLoaded', function () {
+
+    const behalfCheckbox = document.getElementById('mrs_s-1_behalf');
+    const behalfSection  = document.querySelector('.after_behalf');
+
+    if (!behalfCheckbox || !behalfSection) return;
+
+    // helper: toggle required fields
+    function setRequired(state) {
+        behalfSection.querySelectorAll('input, select').forEach(el => {
+            if (state) {
+                el.setAttribute('required', 'required');
+            } else {
+                el.removeAttribute('required');
+                el.value = '';
+            }
+        });
+    }
+
+    function toggleBehalf(animate = true) {
+
+        if (behalfCheckbox.checked) {
+
+            // force reflow for smooth animation (important)
+            if (animate) {
+                behalfSection.style.display = 'flex';
+                behalfSection.getBoundingClientRect();
+            }
+
+            behalfSection.classList.add('active');
+            setRequired(true);
+
+        } else {
+
+            behalfSection.classList.remove('active');
+            setRequired(false);
+
+            // wait for CSS transition to finish, then clean up
+            setTimeout(() => {
+                if (!behalfCheckbox.checked) {
+                    behalfSection.style.display = 'flex';
+                }
+            }, 500); // must match CSS transition time
+        }
+    }
+
+    // Initial state (no animation on load)
+    toggleBehalf(false);
+
+    // Toggle on checkbox change (with animation)
+    behalfCheckbox.addEventListener('change', () => toggleBehalf(true));
+
+});
+
 </script>
 
 
